@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAA Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --card: #13131f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(124,58,237,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 80% 80%, rgba(6,182,212,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .header .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    border: 1px solid rgba(6,182,212,0.3);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 70%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Navigation pills */
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 50px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .nav a {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .nav a:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(124,58,237,0.08);
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.2s; }
+  .section:nth-child(3) { animation-delay: 0.3s; }
+  .section:nth-child(4) { animation-delay: 0.4s; }
+  .section:nth-child(5) { animation-delay: 0.5s; }
+  .section:nth-child(6) { animation-delay: 0.6s; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .section-num {
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    min-width: 30px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .card:hover {
+    border-color: rgba(124,58,237,0.4);
+  }
+
+  /* Form fields */
+  .field-grid {
+    display: grid;
+    gap: 0;
+  }
+
+  .field-grid.cols-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 600px) {
+    .field-grid.cols-2 { grid-template-columns: 1fr; }
+  }
+
+  .field {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 12px;
+    align-items: start;
+    transition: background 0.2s;
+  }
+
+  .field:last-child { border-bottom: none; }
+  .field:hover { background: rgba(255,255,255,0.02); }
+
+  .field-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    padding-top: 10px;
+    font-weight: 500;
+  }
+
+  .field input,
+  .field textarea,
+  .field select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 8px 12px;
+    width: 100%;
+    resize: vertical;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+  }
+
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: var(--accent);
+    background: rgba(124,58,237,0.06);
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Skills tags */
+  .skills-input-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 30px;
+  }
+
+  .skill-tag {
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.4);
+    color: var(--accent);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  .skill-tag button {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    opacity: 0.6;
+  }
+
+  .skill-tag button:hover { opacity: 1; }
+
+  /* Repeatable entries */
+  .entries { display: flex; flex-direction: column; gap: 12px; }
+
+  .entry {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .entry:hover { border-color: rgba(124,58,237,0.3); }
+
+  .entry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .entry-num {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .entry-remove {
+    background: none;
+    border: 1px solid rgba(239,68,68,0.3);
+    color: rgba(239,68,68,0.7);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    transition: all 0.2s;
+  }
+
+  .entry-remove:hover {
+    background: rgba(239,68,68,0.1);
+    color: rgb(239,68,68);
+  }
+
+  .entry .field { border-bottom: 1px solid var(--border); }
+  .entry .field:last-child { border-bottom: none; }
+
+  /* Add button */
+  .add-btn {
+    background: none;
+    border: 1px dashed var(--border);
+    color: var(--muted);
+    padding: 12px;
+    width: 100%;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  .add-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(124,58,237,0.04);
+  }
+
+  /* Semester results table */
+  .semester-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .semester-table th {
+    text-align: left;
+    padding: 10px 16px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  .semester-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .semester-table tr:last-child td { border-bottom: none; }
+
+  .semester-table td input {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    width: 100%;
+    outline: none;
+    padding: 2px 0;
+  }
+
+  .semester-table td input:focus {
+    border-bottom: 1px solid var(--accent);
+  }
+
+  .grade-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  /* Export btn */
+  .export-wrap {
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .export-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 16px 48px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .export-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  .export-btn:active { transform: translateY(0); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--card);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 14px 24px;
+    border-radius: 4px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 100;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="tag">Design & Analysis of Algorithms</div>
+    <h1>Student Portfolio</h1>
+    <p>Fill in your details below · All sections are editable</p>
+  </div>
+
+  <nav class="nav">
+    <a href="#s1">Profile</a>
+    <a href="#s2">Academics</a>
+    <a href="#s3">Projects</a>
+    <a href="#s4">Certifications</a>
+    <a href="#s5">Internships</a>
+    <a href="#s6">Achievements</a>
+  </nav>
+
+  <!-- Section 1: Student Profile -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">Student Profile</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <div class="field-grid cols-2">
+        <div class="field">
+          <span class="field-label">Full Name</span>
+          <input type="text" placeholder="e.g. Arun Kumar" />
+        </div>
+        <div class="field">
+          <span class="field-label">Roll Number</span>
+          <input type="text" placeholder="e.g. 22CS101" />
+        </div>
+        <div class="field">
+          <span class="field-label">Email</span>
+          <input type="email" placeholder="you@college.edu" />
+        </div>
+        <div class="field">
+          <span class="field-label">Phone</span>
+          <input type="text" placeholder="+91 XXXXX XXXXX" />
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <span class="field-label">Department</span>
+          <input type="text" placeholder="e.g. Computer Science & Engineering" />
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <span class="field-label">Skills</span>
+          <div class="skills-input-wrap">
+            <div class="skills-tags" id="skills-tags"></div>
+            <input type="text" id="skill-input" placeholder="Type a skill and press Enter (e.g. Python, Algorithms, C++)" onkeydown="addSkill(event)" />
+          </div>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <span class="field-label">About Me</span>
+          <textarea rows="3" placeholder="Brief introduction about yourself, your interests, and career goals..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Academic Details -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Academic Details</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <table class="semester-table">
+        <thead>
+          <tr>
+            <th>Semester</th>
+            <th>SGPA</th>
+            <th>Key Subjects</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="sem-tbody">
+          <tr><td><input type="text" value="Semester 1" /></td><td><input type="text" placeholder="8.5" /></td><td><input type="text" placeholder="Maths, C Programming..." /></td><td><input type="text" placeholder="Passed" /></td></tr>
+          <tr><td><input type="text" value="Semester 2" /></td><td><input type="text" placeholder="8.2" /></td><td><input type="text" placeholder="DSA, DBMS..." /></td><td><input type="text" placeholder="Passed" /></td></tr>
+          <tr><td><input type="text" value="Semester 3" /></td><td><input type="text" placeholder="8.8" /></td><td><input type="text" placeholder="DAA, OS, Networks..." /></td><td><input type="text" placeholder="Passed" /></td></tr>
+          <tr><td><input type="text" value="Semester 4" /></td><td><input type="text" placeholder="—" /></td><td><input type="text" placeholder="Ongoing..." /></td><td><input type="text" placeholder="In Progress" /></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:12px;">
+      <div class="field">
+        <span class="field-label">CGPA</span>
+        <input type="text" placeholder="e.g. 8.6 / 10" />
+      </div>
+      <div class="field">
+        <span class="field-label">Courses Completed</span>
+        <textarea rows="2" placeholder="e.g. Data Structures, Algorithms, Operating Systems, Database Management..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Projects -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Projects</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="entries" id="projects-container">
+      <!-- injected by JS -->
+    </div>
+    <button class="add-btn" onclick="addEntry('projects', projectFields)">+ Add Project</button>
+  </div>
+
+  <!-- Section 4: Certifications -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Certifications</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="entries" id="certs-container"></div>
+    <button class="add-btn" onclick="addEntry('certs', certFields)">+ Add Certification</button>
+  </div>
+
+  <!-- Section 5: Internships -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">Internships</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="entries" id="intern-container"></div>
+    <button class="add-btn" onclick="addEntry('intern', internFields)">+ Add Internship</button>
+  </div>
+
+  <!-- Section 6: Achievements -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">Achievements</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="entries" id="achieve-container"></div>
+    <button class="add-btn" onclick="addEntry('achieve', achieveFields)">+ Add Achievement</button>
+  </div>
+
+  <div class="export-wrap">
+    <button class="export-btn" onclick="exportPortfolio()">⬇ Export Portfolio</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Portfolio exported successfully!</div>
+
+<script>
+  // Field definitions
+  const projectFields = [
+    { label: 'Project Title', type: 'input', placeholder: 'e.g. Graph Shortest Path Visualizer' },
+    { label: 'Description', type: 'textarea', placeholder: 'Brief description of what the project does and its impact...' },
+    { label: 'Algorithms Used', type: 'input', placeholder: 'e.g. Dijkstra, BFS, Dynamic Programming' },
+    { label: 'Tools / Tech', type: 'input', placeholder: 'e.g. Python, Flask, React, D3.js' },
+    { label: 'GitHub / Link', type: 'input', placeholder: 'https://github.com/...' },
+  ];
+
+  const certFields = [
+    { label: 'Course Name', type: 'input', placeholder: 'e.g. Data Structures & Algorithms' },
+    { label: 'Platform', type: 'input', placeholder: 'e.g. Coursera, NPTEL, Udemy' },
+    { label: 'Issued By', type: 'input', placeholder: 'e.g. Stanford University' },
+    { label: 'Date', type: 'input', placeholder: 'e.g. March 2024' },
+    { label: 'Credential ID', type: 'input', placeholder: 'Optional' },
+  ];
+
+  const internFields = [
+    { label: 'Company Name', type: 'input', placeholder: 'e.g. TCS, Infosys, Startup XYZ' },
+    { label: 'Role', type: 'input', placeholder: 'e.g. Software Development Intern' },
+    { label: 'Duration', type: 'input', placeholder: 'e.g. May 2024 – July 2024 (2 months)' },
+    { label: 'Work Done', type: 'textarea', placeholder: 'Describe your responsibilities and contributions...' },
+    { label: 'Technologies', type: 'input', placeholder: 'e.g. Python, Django, PostgreSQL' },
+  ];
+
+  const achieveFields = [
+    { label: 'Title', type: 'input', placeholder: 'e.g. 1st Place – Hackathon 2024' },
+    { label: 'Category', type: 'input', placeholder: 'e.g. Award / Competition / Publication' },
+    { label: 'Organization', type: 'input', placeholder: 'e.g. IEEE, College Tech Fest' },
+    { label: 'Date', type: 'input', placeholder: 'e.g. October 2024' },
+    { label: 'Description', type: 'textarea', placeholder: 'Brief details about this achievement...' },
+  ];
+
+  const counts = { projects: 0, certs: 0, intern: 0, achieve: 0 };
+
+  function addEntry(section, fields) {
+    counts[section]++;
+    const c = counts[section];
+    const container = document.getElementById(section + '-container');
+    const div = document.createElement('div');
+    div.className = 'entry';
+    div.id = `${section}-${c}`;
+
+    const labels = { projects: 'Project', certs: 'Certification', intern: 'Internship', achieve: 'Achievement' };
+    
+    let fieldsHtml = fields.map(f => `
+      <div class="field">
+        <span class="field-label">${f.label}</span>
+        ${f.type === 'textarea' 
+          ? `<textarea rows="2" placeholder="${f.placeholder}"></textarea>`
+          : `<input type="text" placeholder="${f.placeholder}" />`
+        }
+      </div>
+    `).join('');
+
+    div.innerHTML = `
+      <div class="entry-header">
+        <span class="entry-num">${labels[section]} #${c}</span>
+        <button class="entry-remove" onclick="removeEntry('${section}-${c}')">Remove</button>
+      </div>
+      ${fieldsHtml}
+    `;
+    container.appendChild(div);
+  }
+
+  function removeEntry(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.animation = 'fadeUp 0.3s reverse', setTimeout(() => el.remove(), 250);
+  }
+
+  // Skills
+  function addSkill(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const input = document.getElementById('skill-input');
+      const val = input.value.trim();
+      if (!val) return;
+      const container = document.getElementById('skills-tags');
+      const tag = document.createElement('span');
+      tag.className = 'skill-tag';
+      tag.innerHTML = `${val} <button onclick="this.parentElement.remove()">×</button>`;
+      container.appendChild(tag);
+      input.value = '';
+    }
+  }
+
+  // Export
+  function exportPortfolio() {
+    // Collect data
+    const data = {
+      profile: {},
+      skills: [],
+      semesters: [],
+      projects: [],
+      certifications: [],
+      internships: [],
+      achievements: []
+    };
+
+    // Profile inputs
+    const profileCard = document.querySelector('#s1 .card');
+    profileCard.querySelectorAll('input[type=text], input[type=email], textarea').forEach((el, i) => {
+      const label = el.closest('.field')?.querySelector('.field-label')?.textContent;
+      if (label && label !== 'Skills') data.profile[label] = el.value;
+    });
+
+    // Skills
+    document.querySelectorAll('.skill-tag').forEach(t => {
+      data.skills.push(t.textContent.replace('×','').trim());
+    });
+
+    const exported = JSON.stringify(data, null, 2);
+    const blob = new Blob([exported], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'daa-portfolio.json';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // Init with one entry each
+  addEntry('projects', projectFields);
+  addEntry('certs', certFields);
+  addEntry('intern', internFields);
+  addEntry('achieve', achieveFields);
+</script>
+</body>
+</html>
